@@ -35,8 +35,12 @@ with open(input_file, 'r', newline='') as infile:
               
               # Define the database entry you want to extract
               db_entry_name = CONNECTION_STRING
-              host_pattern = rf'{db_entry_name}\s*=\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\)\(HOST\s*=\s*([^)]+)\)\((?:(?!\)).)*\s*\)\)\s*\)\s*\((?:(?!\)).)*\s*\(SERVICE_NAME\s*=\s*([^)]+)\)'
+              # try:
+              host_pattern = rf'{db_entry_name}\s*=\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\)\s*\(HOST\s*=\s*([^)]+)\)\s*\((?:(?!\)).)*\)\s*\)\s*\)\s*\((?:(?!\)).)*\s*\(SERVICE_NAME\s*=\s*([^)]+)\)'
               host_matches = re.search(host_pattern, ora_contents, re.DOTALL)
+              if host_matches == None:
+                host_pattern = rf'{db_entry_name}\s*=\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\)\s*\(HOST\s*=\s*([^)]+)\)\s*\((?:(?!\)).)*\)\s*\)\s*\((?:(?!\)).)*\s*\(SERVICE_NAME\s*=\s*([^)]+)\)'
+                host_matches = re.search(host_pattern, ora_contents, re.DOTALL)
               
               if host_matches:
                   host = host_matches.group(1)
@@ -46,7 +50,10 @@ with open(input_file, 'r', newline='') as infile:
                   row.append(service_name)
                   csvwriter.writerow(row)
               else:
-                  print(f"Database entry {db_entry_name} not found.")
+                  row.append("N/A")
+                  row.append("N/A")
+                  csvwriter.writerow(row)
+                  print(f"ORA Database entry {db_entry_name} not found.")
                              
    
            if CNX_SUBTYPE_NAME == "ODBC":             
@@ -55,18 +62,24 @@ with open(input_file, 'r', newline='') as infile:
               config.read(ini_file)
               
               # Access a value from the INI file
-              value = config.get(CONNECTION_STRING, 'Address')
-              
-              # Split the string into a list of parts using the delimiter
-              data = value.split("\\")
-              hostname = data[0]
-              row.append(hostname)
-
-              if len(data) == 2:
-                db_name = data[1]
-                row.append(db_name)
-              else:   
+              try: 
+                 value = config.get(CONNECTION_STRING, 'Address')
+                 
+                 # Split the string into a list of parts using the delimiter
+                 data = value.split("\\")
+                 hostname = data[0]
+                 row.append(hostname)
+   
+                 if len(data) == 2:
+                   db_name = data[1]
+                   row.append(db_name)
+                 else:   
+                   row.append("N/A")
+   
+                 csvwriter.writerow(row)
+              except:
                 row.append("N/A")
-
-              csvwriter.writerow(row)
+                row.append("N/A")
+                csvwriter.writerow(row)
+                print(f"ODBC Database entry {CONNECTION_STRING} not found.")  
 print(f"{output_file} file is generated.. :)")          
