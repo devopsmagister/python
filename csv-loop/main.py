@@ -60,26 +60,25 @@ with open(input_file, 'r', newline='') as infile:
               # Create a ConfigParser object and read the INI file
               config = configparser.ConfigParser()
               config.read(ini_file)
-              
-              # Access a value from the INI file
               try: 
-                 value = config.get(CONNECTION_STRING, 'Address')
-                 
-                 # Split the string into a list of parts using the delimiter
-                 data = value.split("\\")
-                 hostname = data[0]
-                 row.append(hostname)
-   
-                 if len(data) == 2:
-                   db_name = data[1]
-                   row.append(db_name)
-                 else:   
-                   row.append("N/A")
-   
+                 address = config.get(CONNECTION_STRING, 'Address')
+                 address = address.split("\\")
+                 address = address[0]
+                 db_name = config.get(CONNECTION_STRING, 'Database')
+                 row.append(address)
+                 row.append(db_name)
                  csvwriter.writerow(row)
-              except:
-                row.append("N/A")
-                row.append("N/A")
-                csvwriter.writerow(row)
-                print(f"ODBC Database entry {CONNECTION_STRING} not found.")  
-print(f"{output_file} file is generated.. :)")          
+
+              except: 
+                 hostname = config.get(CONNECTION_STRING, 'HostName')
+                 hostname = hostname.split("\\")
+                 hostname = data[0]
+                 db_name = config.get(CONNECTION_STRING, 'Database')
+                 row.append(hostname)
+                 row.append(db_name)
+                 csvwriter.writerow(row) 
+
+print(f"{output_file} file is generated.. :)")  
+
+
+
