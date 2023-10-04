@@ -1,10 +1,20 @@
-ORCL = 
+#ORCL = 
+#  (Description =
+#    (Address list =
+#      (Address= ( protocol = tcp)(HOST = test.com)(port = 80))
+#    )
+#    (Connect_data =
+#      (SERVICE_NAME = test_SERVICE_NAME0)
+#    )
+#  )
+ORCL1 = 
   (Description =
-    (Address list =
-      (Address= ( protocol = tcp)(HOST = test.com)(port = 80))
-    )
+      (Address= 
+      ( protocol = tcp)
+      (HOST = test.com)
+      (port = 80))
     (Connect_data =
-      (SERVICE_NAME = test_SERVICE_NAME)
+      (SERVICE_NAME = test_SERVICE_NAME1)
     )
   )
 ORCL1 = 

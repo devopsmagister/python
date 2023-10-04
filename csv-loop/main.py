@@ -11,7 +11,8 @@ output_file = 'output_data.csv'  # Use a different filename for the output
 ini_file = "./data.ini"
 ora_file = "./tnsnames.ora"
 
-
+with open(ora_file, 'r') as ora_file:
+    ora_contents = ora_file.read()
 # Open the CSV file for reading
 with open(input_file, 'r', newline='') as infile:
     with open(output_file, 'w', newline='') as outfile:
@@ -30,9 +31,7 @@ with open(input_file, 'r', newline='') as infile:
            SUBJECT_AREA, CONNECTION_NAME, CONNECTION_STRING, CNX_SUBTYPE_NAME = row  # Assuming three columns in the CSV
            if CNX_SUBTYPE_NAME == "Oracle":
               # Define the command to run, including the script name and arguments
-              with open(ora_file, 'r') as ora_file:
-                  ora_contents = ora_file.read()
-              
+
               # Define the database entry you want to extract
               db_entry_name = CONNECTION_STRING
               # try:
@@ -60,23 +59,31 @@ with open(input_file, 'r', newline='') as infile:
               # Create a ConfigParser object and read the INI file
               config = configparser.ConfigParser()
               config.read(ini_file)
-              try: 
-                 address = config.get(CONNECTION_STRING, 'Address')
-                 address = address.split("\\")
-                 address = address[0]
-                 db_name = config.get(CONNECTION_STRING, 'Database')
-                 row.append(address)
-                 row.append(db_name)
-                 csvwriter.writerow(row)
-
-              except: 
-                 hostname = config.get(CONNECTION_STRING, 'HostName')
-                 hostname = hostname.split("\\")
-                 hostname = data[0]
-                 db_name = config.get(CONNECTION_STRING, 'Database')
-                 row.append(hostname)
-                 row.append(db_name)
-                 csvwriter.writerow(row) 
+              try:
+                config.get(CONNECTION_STRING, 'Database')
+                try: 
+                   address = config.get(CONNECTION_STRING, 'Address')
+                   address = address.split("\\")
+                   address = address[0]
+                   db_name = config.get(CONNECTION_STRING, 'Database')
+                   row.append(address)
+                   row.append(db_name)
+                   csvwriter.writerow(row)
+  
+                except: 
+                   hostname = config.get(CONNECTION_STRING, 'HostName')
+                   hostname = hostname.split("\\")
+                   hostname = data[0]
+                   db_name = config.get(CONNECTION_STRING, 'Database')
+                   row.append(hostname)
+                   row.append(db_name)
+                   csvwriter.writerow(row)                 
+              except:
+                row.append("N/A")
+                row.append("N/A")
+                csvwriter.writerow(row)                
+                print(f"ODBC Database entry {CONNECTION_STRING} not found.")
+     
 
 print(f"{output_file} file is generated.. :)")  
 
