@@ -59,32 +59,45 @@ with open(input_file, 'r', newline='') as infile:
               # Create a ConfigParser object and read the INI file
               config = configparser.ConfigParser()
               config.read(ini_file)
+ 
               try:
                 config.get(CONNECTION_STRING, 'Database')
-                try: 
-                   address = config.get(CONNECTION_STRING, 'Address')
-                   address = address.split("\\")
-                   address = address[0]
-                   db_name = config.get(CONNECTION_STRING, 'Database')
-                   row.append(address)
-                   row.append(db_name)
-                   csvwriter.writerow(row)
-  
-                except: 
-                   hostname = config.get(CONNECTION_STRING, 'HostName')
-                   hostname = hostname.split("\\")
-                   hostname = data[0]
-                   db_name = config.get(CONNECTION_STRING, 'Database')
-                   row.append(hostname)
-                   row.append(db_name)
-                   csvwriter.writerow(row)                 
+                db_name = config.get(CONNECTION_STRING, 'Database')
+                # print(db_name)
               except:
-                row.append("N/A")
-                row.append("N/A")
-                csvwriter.writerow(row)                
-                print(f"ODBC Database entry {CONNECTION_STRING} not found.")
-     
-
+                try:
+                  config.get(CONNECTION_STRING, 'DB')
+                  db_name = config.get(CONNECTION_STRING, 'DB')
+                  print(db_name)
+  
+                except:
+                  db_name = "N/A"
+                  print(f"ODBC Database entry {CONNECTION_STRING} not found.")
+                  
+  
+              try: 
+                address = config.get(CONNECTION_STRING, 'Address')
+                address = address.split("\\")
+                hostname = address[0]
+              except:  
+                try: 
+                  address = config.get(CONNECTION_STRING, 'HostName')
+                  address = address.split("\\")
+                  hostname = address[0]
+                except:  
+                  try: 
+                    address = config.get(CONNECTION_STRING, 'HOST')
+                    address = address.split("\\")
+                    hostname = address[0]
+                  except:
+                    hostname = "N/A"
+                    print(f"ODBC Host entry {CONNECTION_STRING} not found.")
+          
+              row.append(hostname)
+              row.append(db_name)
+              csvwriter.writerow(row)                
+ 
+          
 print(f"{output_file} file is generated.. :)")  
 
 
