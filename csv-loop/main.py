@@ -41,6 +41,14 @@ with open(input_file, 'r', newline='') as infile:
                 host_pattern = rf'{db_entry_name}\s*=\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\)\s*\(HOST\s*=\s*([^)]+)\)\s*\((?:(?!\)).)*\)\s*\)\s*\((?:(?!\)).)*\s*\(SERVICE_NAME\s*=\s*([^)]+)\)'
                 host_matches = re.search(host_pattern, ora_contents, re.DOTALL)
               
+              if host_matches == None:
+                host_pattern = rf'{db_entry_name}\s*=\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\)\s*\((?:(?!\)).)*\s*\)*\((?:(?!\)).)*\s*\)\)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\)\s*\(HOST\s*=\s*([^)]+)\)\s*\((?:(?!\)).)*\)\s*\)\s*\)\s*\((?:(?!\)).)*\s*\(SERVICE_NAME\s*=\s*([^)]+)\)'
+                host_matches = re.search(host_pattern, ora_contents, re.DOTALL)
+              
+              if host_matches == None:
+                host_pattern = rf'{db_entry_name}\s*=\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\(*\s*\((?:(?!\)).)*\)*\s*\s*\((?:(?!\)).)*\s*\)*\s*\(HOST\s*=\s*([^)]+)\)\s*\((?:(?!\)).)*\)\s*\)\s*\)\s*\((?:(?!\)).)*\s*\(SERVICE_NAME\s*=\s*([^)]+)\)'
+                host_matches = re.search(host_pattern, ora_contents, re.DOTALL)
+              
               if host_matches:
                   host = host_matches.group(1)
                   service_name = host_matches.group(2)
