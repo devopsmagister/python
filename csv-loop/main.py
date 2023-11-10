@@ -36,18 +36,19 @@ with open(input_file, 'r', newline='') as infile:
               db_entry_name = CONNECTION_STRING
               # try:
               host_pattern = rf'{db_entry_name}\s*=\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\)\s*\(HOST\s*=\s*([^)]+)\)\s*\((?:(?!\)).)*\)\s*\)\s*\)\s*\((?:(?!\)).)*\s*\(SERVICE_NAME\s*=\s*([^)]+)\)'
-              host_matches = re.search(host_pattern, ora_contents, re.DOTALL)
+              host_matches = re.search(host_pattern, ora_contents, re.IGNORECASE)
               if host_matches == None:
                 host_pattern = rf'{db_entry_name}\s*=\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\)\s*\(HOST\s*=\s*([^)]+)\)\s*\((?:(?!\)).)*\)\s*\)\s*\((?:(?!\)).)*\s*\(SERVICE_NAME\s*=\s*([^)]+)\)'
-                host_matches = re.search(host_pattern, ora_contents, re.DOTALL)
+                host_matches = re.search(host_pattern, ora_contents, re.IGNORECASE)
               
               if host_matches == None:
                 host_pattern = rf'{db_entry_name}\s*=\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\)\s*\((?:(?!\)).)*\s*\)*\((?:(?!\)).)*\s*\)\)*\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\)\s*\(HOST\s*=\s*([^)]+)\)\s*\((?:(?!\)).)*\)\s*\)\s*\)\s*\((?:(?!\)).)*\s*\(SERVICE_NAME\s*=\s*([^)]+)\)'
-                host_matches = re.search(host_pattern, ora_contents, re.DOTALL)
+                host_matches = re.search(host_pattern, ora_contents, re.IGNORECASE)
               
+              #
               if host_matches == None:
                 host_pattern = rf'{db_entry_name}\s*=\s*\((?:(?!\)).)*\s*\((?:(?!\)).)*\s*\(*\s*\((?:(?!\)).)*\)*\s*\s*\((?:(?!\)).)*\s*\)*\s*\(HOST\s*=\s*([^)]+)\)\s*\((?:(?!\)).)*\)\s*\)\s*\)\s*\((?:(?!\)).)*\s*\(SERVICE_NAME\s*=\s*([^)]+)\)'
-                host_matches = re.search(host_pattern, ora_contents, re.DOTALL)
+                host_matches = re.search(host_pattern, ora_contents, re.IGNORECASE)
               
               if host_matches:
                   host = host_matches.group(1)
